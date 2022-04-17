@@ -3,23 +3,29 @@ package com.modifier.nbpapimodifier.exchangerates.response;
 import com.modifier.nbpapimodifier.exchangerates.request.series.ExchangeRatesSeries;
 import com.modifier.nbpapimodifier.exchangerates.request.series.RateSeries;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ExchangeRatesLast5Days {
+public class ExchangeRatesLastDays {
     private final String name;
     private final String code;
+    private final BigDecimal avgRate;
     private final RatePLNtoCurrency[] rates;
 
-    public ExchangeRatesLast5Days(ExchangeRatesSeries exchangeRatesSeries) {
+    public ExchangeRatesLastDays(ExchangeRatesSeries exchangeRatesSeries, int ratesAmount) {
         this.name = exchangeRatesSeries.getCurrency();
         this.code = exchangeRatesSeries.getCode();
-        this.rates = new RatePLNtoCurrency[5];
+        this.rates = new RatePLNtoCurrency[ratesAmount];
+        BigDecimal avgRateSum = BigDecimal.ZERO;
         RateSeries[] rateSeries = exchangeRatesSeries.getRates();
-        for(int i = 0; i < 5; i++) {
+        for(int i = 0; i < ratesAmount; i++) {
             this.rates[i] = new RatePLNtoCurrency(rateSeries[i]);
+            avgRateSum = avgRateSum.add(this.rates[i].getPlnRate());
         }
+        this.avgRate = avgRateSum.divide(new BigDecimal(this.rates.length), 4, RoundingMode.HALF_UP);
     }
 
     public String getName() {
@@ -30,16 +36,21 @@ public class ExchangeRatesLast5Days {
         return code;
     }
 
+    public BigDecimal getAvgRate() {
+        return avgRate;
+    }
+
     public RatePLNtoCurrency[] getRates() {
         return rates;
     }
 
     @Override
     public String toString() {
-        return "ExchangeRatesPLNtoCurrency{" +
+        return "ExchangeRatesLastDays{" +
                 "name='" + name + '\'' +
                 ", code='" + code + '\'' +
-                ", rates=" + rates +
+                ", avgRate=" + avgRate +
+                ", rates=" + Arrays.toString(rates) +
                 '}';
     }
 }

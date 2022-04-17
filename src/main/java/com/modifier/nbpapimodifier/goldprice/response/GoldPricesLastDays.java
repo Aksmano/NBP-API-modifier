@@ -6,18 +6,18 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Arrays;
 
-public class GoldPricesLast14Days {
+public class GoldPricesLastDays {
 
     private final BigDecimal avgPrice;
     private final GoldPrice[] goldPrices;
 
-    public GoldPricesLast14Days(GoldPrice[] goldPrices) {
+    public GoldPricesLastDays(GoldPrice[] goldPrices, int numberOfDays) {
         this.goldPrices = goldPrices;
         BigDecimal sum = BigDecimal.ZERO;
         for(GoldPrice goldPrice : goldPrices) {
             sum = sum.add(goldPrice.getPrice());
         }
-        this.avgPrice = sum.divide(new BigDecimal("14"), 2, RoundingMode.HALF_UP);
+        this.avgPrice = sum.divide(new BigDecimal(numberOfDays), 2, RoundingMode.HALF_UP);
     }
 
     public GoldPrice[] getGoldPrices() {

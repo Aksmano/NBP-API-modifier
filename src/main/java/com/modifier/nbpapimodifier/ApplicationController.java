@@ -3,9 +3,9 @@ package com.modifier.nbpapimodifier;
 import com.modifier.nbpapimodifier.exchangerates.request.series.ExchangeRatesSeries;
 import com.modifier.nbpapimodifier.exchangerates.request.tables.ExchangeRatesTable;
 import com.modifier.nbpapimodifier.exchangerates.request.tables.RateTables;
-import com.modifier.nbpapimodifier.exchangerates.response.ExchangeRatesLast5Days;
+import com.modifier.nbpapimodifier.exchangerates.response.ExchangeRatesLastDays;
 import com.modifier.nbpapimodifier.goldprice.request.GoldPrice;
-import com.modifier.nbpapimodifier.goldprice.response.GoldPricesLast14Days;
+import com.modifier.nbpapimodifier.goldprice.response.GoldPricesLastDays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -51,22 +51,26 @@ public class ApplicationController {
     }
 
     @GetMapping("/api/exchange-rates/{currencyCode}")
-    public ExchangeRatesLast5Days getLastFiveBusinessDaysExchangeRates(@PathVariable("currencyCode") String currencyCode, RestTemplate restTemplate) {
+    public ExchangeRatesLastDays getLastFiveBusinessDaysExchangeRates(@PathVariable("currencyCode") String currencyCode, RestTemplate restTemplate) {
         String tableName = (aTableCodes.contains(currencyCode.toUpperCase(Locale.ROOT)) ? "a" : "b");
-        String reqUri = String.format("/exchangerates/rates/%s/%s/last/5", tableName, currencyCode);
+        int numberOfLastDays = (tableName.equals("a") ? 5 : 1);     // currencies rate from table B are updated only once a week,
+                                                                    // so then it should return only one rate record
+
+        String reqUri = String.format("/exchangerates/rates/%s/%s/last/%d", tableName, currencyCode, numberOfLastDays);
         ExchangeRatesSeries exchangeRatesSeries = restTemplate.getForObject(nbpUri + reqUri, ExchangeRatesSeries.class);
 
         assert exchangeRatesSeries != null;
 
-        return new ExchangeRatesLast5Days(exchangeRatesSeries);
+        return new ExchangeRatesLastDays(exchangeRatesSeries, numberOfLastDays);
     }
 
     @GetMapping("/api/gold-price/average")
-    public GoldPricesLast14Days getGoldPrice(RestTemplate restTemplate) {
-        String reqUri = "/cenyzlota/last/14";
-        GoldPrice[] goldPrice = restTemplate.getForObject(nbpUri + reqUri, GoldPrice[].class);
+    public GoldPricesLastDays getGoldPrice(RestTemplate restTemplate) {
+        String reqUri = "/cenyzlota/last/";
+        int numberOfLastDays = 14;
+        GoldPrice[] goldPrice = restTemplate.getForObject(String.format("%s%s%d", nbpUri, reqUri, numberOfLastDays), GoldPrice[].class);
 
         assert goldPrice != null;
-        return new GoldPricesLast14Days(goldPrice);
+        return new GoldPricesLastDays(goldPrice, numberOfLastDays);
     }
 }
