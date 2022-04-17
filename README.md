@@ -39,3 +39,13 @@ This application uses *[NBP Web API](https://api.nbp.pl/)* for fetching data abo
 >> GET **http://localhost:8080/api/gold-price/average**
 >>
 >> Response: {"avgPrice":265.08,"goldPrices":[{"date":"2022-03-29","price":266.46}, ...]}
+
+## Error response:
+
+Response parameters
+- **timestamp -** string value which consists date (YYYY-DD-MM), current time (HH-MM-SS.mmm) and time zone (GG:GG)
+- **status -** status response value
+- **name -** name of the error type
+- **path -** path of the request
+
+Response example: {"timestamp":"2022-04-17T23:16:49.521+00:00","status":500,"error":"Internal Server Error","path":"/api/exchange-rates/bfg"}
