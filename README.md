@@ -54,4 +54,4 @@ To run server with from .jar file you need to go to target directory and run:
 > - **name -** name of the error type
 > - **path -** path of the request
 >
-> Response example: {"timestamp":"2022-04-17T23:16:49.521+00:00","status":500,"error":"Internal Server Error","path":"/api/exchange-rates/bfg"}
+> Response example: ```{"timestamp":"2022-04-17T23:16:49.521+00:00","status":500,"error":"Internal Server Error","path":"/api/exchange-rates/bfg"}```
