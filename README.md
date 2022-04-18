@@ -3,9 +3,15 @@ Simple service written with Spring Boot, which return modified NBP API requests 
 
 This application uses *[NBP Web API](https://api.nbp.pl/)* for fetching data about average currency rates and gold prices.
 
+## Launching server
+
+To run server with from .jar file you need to go to target directory and run:
+> ``java -jar nbp-api-modifier-0.0.1-SNAPSHOT.jar``
+>
+> **Note:** you need to have JRE 11 or higher version to run it
 ## Exposed endpoints:
 
-> **Note:** Tomcat Server starts on port 8080 with no context path
+> **Note:** Tomcat Server starts on port 8080 with context path ''
 
 ### GET /api/exchange-rates/{currencyCode} 
 
@@ -24,7 +30,7 @@ This application uses *[NBP Web API](https://api.nbp.pl/)* for fetching data abo
 > Query example
 >> GET **http://localhost:8080/api/exchange-rates/usd**
 >> 
->> Response: {"name":"dolar amerykański","code":"USD","avgRate":0.2338,"rates":[{"date":"2022-04-11","plnRate":0.2348}, ...]}
+>> Response: ```{"name":"dolar amerykański","code":"USD","avgRate":0.2338,"rates":[{"date":"2022-04-11","plnRate":0.2348}, ...]}```
 >
 > **Note:** some currencies are updated only once, so in their cases there is only one object in rates array
 
@@ -38,7 +44,7 @@ This application uses *[NBP Web API](https://api.nbp.pl/)* for fetching data abo
 > Query example
 >> GET **http://localhost:8080/api/gold-price/average**
 >>
->> Response: {"avgPrice":265.08,"goldPrices":[{"date":"2022-03-29","price":266.46}, ...]}
+>> Response: ```{"avgPrice":265.08,"goldPrices":[{"date":"2022-03-29","price":266.46}, ...]}```
 
 ## Error response:
 
